@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "tarjetacredito-d3da5": {
+      "hosting": {
+        "tarjetaCredito": [
+          "tarjetacredito-d3da5"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "tarjetacredito-d3da5"
+  }
+}
