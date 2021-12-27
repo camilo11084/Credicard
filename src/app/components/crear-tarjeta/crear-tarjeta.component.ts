@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 import { TarjetaCredito } from 'src/app/models/TarjetaCredito';
 import { TarjetaService } from 'src/app/services/tarjeta.service';
 
@@ -10,8 +11,9 @@ import { TarjetaService } from 'src/app/services/tarjeta.service';
 })
 export class CrearTarjetaComponent implements OnInit {
   form: FormGroup;
+  loading = false;
 
-  constructor(private fb: FormBuilder, private _tarjetaService: TarjetaService) {
+  constructor(private fb: FormBuilder, private _tarjetaService: TarjetaService, private toastr: ToastrService) {
     this.form = this.fb.group({
       titular: ['', Validators.required],
       numeroTarjeta: ['',[ Validators.required, Validators.minLength(16), Validators.maxLength(16)]],
@@ -21,6 +23,9 @@ export class CrearTarjetaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._tarjetaService.getTarjetaEdit().subscribe(data => {
+      console.log(data)
+    })
   }
 
   crearTarjeta(){
@@ -33,11 +38,15 @@ export class CrearTarjetaComponent implements OnInit {
       fechaActualizacion: new Date()
     }
 
-
+    this.loading = true;
     this._tarjetaService.guardarTarjeta(TARJETA).then(()=> {
+      this.loading = false;
       console.log('tarjeta registrada')
+      this.toastr.success('La tarjeta fue registrada con exito!', 'Tarjeta registrada')
       this.form.reset();
     }, error => {
+      this.loading = false;
+      this.toastr.error('Opps! Ocurrio un error', 'Error')
       console.log(error);
     })
 
